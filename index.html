@@ -57,8 +57,7 @@ body {
 .legend {
   display: flex;
   gap: 0.75rem;
-  margin-bottom: 0;
-  margin-right: auto; /* Push the legend to the left */
+  margin-bottom: 0; /* Removed margin-bottom */
 }
 
 .legend-item {
@@ -66,13 +65,20 @@ body {
   align-items: center;
   gap: 0.5rem;
   font-size: 0.75rem;
-  color: var(--text-secondary);
+  color: var(--text-primary);
+  padding: 0.3rem 0.8rem; /* Added padding */
+  border: 1px solid var(--border); /* Added border */
+  border-radius: 6px; /* Added border-radius */
+  background: var(--bg-secondary); /* Added background */
+  height: 24px; /* Set height */
+  text-transform: uppercase; /* Uppercase text */
+  letter-spacing: 0.5px; /* Added letter-spacing */
 }
 
 .legend-color {
-  width: 12px;
-  height: 12px;
-  border-radius: 3px;
+  width: 8px; /* Changed width */
+  height: 8px; /* Changed height */
+  border-radius: 2px; /* Adjusted border-radius */
 }
 
 .gold-bg { 
@@ -235,37 +241,74 @@ tr:hover td.rare-bg::after {
   flex-direction: column;
   width: 100%;
   min-height: 0; /* Allow container to shrink */
+  position: relative; /* Needed for proper shadow rendering */
+  overflow: hidden; /* Add this to prevent overflow */
+}
+
+/* Add a wrapper div for the table with scrolling */
+.table-wrapper {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: auto; /* Add horizontal scroll if table gets too wide */
+  border-radius: 12px;
+  margin-bottom: 0.25rem;
+  /* Custom scrollbar styling */
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent) var(--bg-secondary);
+}
+
+/* Custom scrollbar styles for webkit browsers */
+.table-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+  border-radius: 8px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 8px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-hover);
 }
 
 table {
   width: 100%;
   flex: 1;
-  margin-bottom: 0.5rem;
-  border-collapse: separate;
-  border-spacing: 0;
-  background-color: var(--bg-secondary);
-  border-radius: 12px;
+  margin-bottom: 0.25rem; /* Reduce bottom margin */
+  border-collapse: collapse; /* Change from separate to collapse */
   overflow: hidden;
+  border-radius: 12px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 th, td {
-  padding: 0.5rem 1rem;  /* Slightly reduced padding */
-  height: 2.75rem;  /* Slightly reduced height */
+  padding: 0.4rem 1rem;  /* Slightly reduced padding */
+  height: 2.5rem;  /* Slightly reduced height */
   text-align: center; /* Change from left to center */
-  border-bottom: 1px solid var(--border);
+  border-top: 1px solid var(--border); /* Add top border */
+  border-bottom: none; /* Remove the default bottom border */
   font-size: 0.75rem; /* Base font size */
   text-transform: uppercase;
   letter-spacing: 0.5px;
   vertical-align: middle;
+  min-width: 100px; /* Add minimum width for all columns */
 }
 
-/* Target cells containing numbers with a larger font size */
-td:nth-child(n+3) { /* Starting from the third column, since first two are email and password */
-  font-size: 0.875rem; /* Larger font size for numeric columns */
-  font-weight: 500; /* Slightly bolder */
-  font-family: 'Inter', monospace; /* Monospace font for numbers */
-  text-align: center; /* Ensure numbers stay centered */
+/* Specific width for email and password columns */
+td:nth-child(1),
+td:nth-child(2) {
+  min-width: 180px; /* Email and password need more space */
+}
+
+/* Increase width specifically for Beex column - assuming it's usually the 4th column */
+td:nth-child(4),
+th:nth-child(4) {
+  min-width: 160px; /* Increased width for Beex column */
 }
 
 /* Keep email and password columns centered as well */
@@ -357,9 +400,9 @@ tr:hover td {
 .pagination-controls {
   display: flex;
   justify-content: center;
-  gap: 1rem; /* Adjusted spacing */
-  margin-top: 0.5rem; /* Reduced from 1rem */
-  padding-bottom: 0; /* Adjusted padding */
+  gap: 1rem;
+  margin-top: 0.25rem; /* Reduce top margin */
+  padding-bottom: 0.25rem; /* Add small padding at bottom */
 }
 
 .page-button {
@@ -389,7 +432,28 @@ tr:hover td {
   cursor: not-allowed;
 }
 
-/* Add these CSS rules to the existing <style> section */
+/* Add these new CSS rules after the existing table styles */
+tr.gold-bg + tr.gold-bg td {
+  border-top: 1px solid rgba(255, 215, 0, 0.5);
+  box-shadow: 0 -1px 8px rgba(255, 215, 0, 0.3);
+}
+
+tr.silver-bg + tr.silver-bg td {
+  border-top: 1px solid rgba(192, 192, 192, 0.5);
+  box-shadow: 0 -1px 8px rgba(192, 192, 192, 0.3);
+}
+
+/* Remove border from first row cells */
+tr:first-child td {
+  border-top: none;
+}
+
+/* Ensure the glow effect shows up */
+#tableContainer {
+  position: relative;
+  z-index: 1;
+}
+
 .discord-button {
   display: flex;
   align-items: center;
@@ -431,6 +495,19 @@ tr:hover td {
     font-size: 0.75rem;
 }
 
+.sort-status-button {
+    margin-left: 1rem;
+    padding: 0.3rem 0.8rem;
+    font-size: 0.7rem;
+    height: 24px;
+    display: flex;
+    align-items: center;
+}
+
+.sort-status-button:hover {
+    transform: translateY(-1px);
+}
+
 @media (max-width: 768px) {
   body {
     padding: 0.5rem;
@@ -470,6 +547,7 @@ tr:hover td {
                 <div class="legend-color rare-bg"></div>
                 <span>Rare</span>
             </div>
+            <button class="button sort-status-button" onclick="sortByStatus()">Sort by Status</button>
         </div>
         <a href="https://discord.gg/nzhvhqrjww" target="_blank" class="discord-button">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -486,6 +564,12 @@ tr:hover td {
 </div>
 
 <script>
+let data = [];
+let currentPage = 1;
+let itemsPerPage = 9; // Changed from 20 to 9
+let currentSortColumn = null;
+let currentSortDirection = 'asc';
+
 function parseData() {
     const input = document.getElementById('inputArea').value;
     if (!input) {
@@ -500,7 +584,7 @@ function parseData() {
     }
 
     const parsedData = lines.map(line => {
-        const data = {};
+        const item = {};  // Changed from data to item
         const parts = line.split('|');
         
         // Validate email:password format
@@ -514,30 +598,32 @@ function parseData() {
             return null; // Skip invalid lines
         }
         
-        data['Email'] = emailPart[0].trim();
-        data['Password'] = emailPart[1].trim();
+        item['Email'] = emailPart[0].trim();
+        item['Password'] = emailPart[1].trim();
         
         // Parse remaining key-value pairs
         parts.slice(1).forEach(pair => {
-            if (!pair) return; // Skip empty pairs
+            if (!pair || !pair.includes(':')) return; // Skip invalid pairs
             
             const [key, value] = pair.split(':').map(s => s?.trim() || '');
             if (key && value) {
                 // Clean up the key (remove spaces and '=')
                 const cleanKey = key.replace('=', '').trim();
-                // Skip Friends, Gender, Units, Profiles, Status and Votes
+                // Skip specific fields
                 if (!['Friends', 'Gender', 'Units', 'Profiles', 'Status', 'Votes'].includes(cleanKey)) {
                     // Clean up the value (remove quotes)
                     const cleanValue = value.replace(/"/g, '').trim();
-                    data[cleanKey] = cleanValue;
+                    if (cleanKey && cleanValue) {
+                        item[cleanKey] = cleanValue;
+                    }
                 }
             }
             // Store status separately for row coloring
-            if (key && key.trim() === 'Status') {
-                data['_status'] = value.trim();
+            if (key && value && key.trim() === 'Status') {
+                item['_status'] = value.trim();
             }
         });
-        return data;
+        return item;
     }).filter(item => item !== null); // Remove any null entries from invalid lines
 
     // Check if we have valid parsed data
@@ -556,8 +642,8 @@ function parseData() {
     };
 
     parsedData.sort((a, b) => {
-        const statusA = (a._status || '').trim().toUpperCase();
-        const statusB = (b._status || '').trim().toUpperCase();
+        const statusA = (a?._status || '').trim().toUpperCase();
+        const statusB = (b?._status || '').trim().toUpperCase();
         
         // Get the order value for each status, defaulting to highest number if status not found
         const orderA = statusOrder[statusA] || 999;
@@ -580,11 +666,12 @@ function getStatusClass(status) {
     return '';
 }
 
-function createTable(data) {
-    if (!data.length) return;
+function createTable(inputData) {
+    if (!inputData.length) return;
 
-    const itemsPerPage = 5; // Reduced from 6 to 5 to better fit the viewport
-    let currentPage = 1;
+    // Store the data globally
+    data = inputData;
+    currentPage = 1;
     const totalPages = Math.ceil(data.length / itemsPerPage);
 
     function renderPage(pageNum) {
@@ -592,23 +679,33 @@ function createTable(data) {
         const endIndex = Math.min(startIndex + itemsPerPage, data.length);
         const pageData = data.slice(startIndex, endIndex);
 
+        // Create a fresh table structure
         const table = document.createElement('table');
         const thead = document.createElement('thead');
         const tbody = document.createElement('tbody');
+        
+        // Get headers excluding internal fields
         const headers = Object.keys(pageData[0]).filter(h => !h.startsWith('_'));
 
-        // Create header row
+        // Create header row with proper structure
         const headerRow = document.createElement('tr');
         headers.forEach(header => {
             const th = document.createElement('th');
             th.textContent = header;
             th.classList.add('sort-icon');
             th.onclick = () => sortTable(header, table);
+            
+            // Apply sort classes based on current sort state
+            if (header === currentSortColumn) {
+                th.classList.add(currentSortDirection === 'asc' ? 'sort-asc' : 'sort-desc');
+            }
+            
             headerRow.appendChild(th);
         });
         thead.appendChild(headerRow);
+        table.appendChild(thead);
 
-        // Create data rows
+        // Create data rows with proper structure
         pageData.forEach(item => {
             const row = document.createElement('tr');
             const statusClass = getStatusClass(item._status);
@@ -616,24 +713,29 @@ function createTable(data) {
             
             headers.forEach(header => {
                 const td = document.createElement('td');
-                td.textContent = item[header];
+                td.textContent = item[header] || '';  // Handle undefined values
                 row.appendChild(td);
             });
             tbody.appendChild(row);
         });
-
-        table.appendChild(thead);
+        
         table.appendChild(tbody);
         
+        // Clear and update container
         const container = document.getElementById('tableContainer');
         container.innerHTML = '';
-        container.appendChild(table);
 
-        // Create pagination controls
+        // Add wrapper div
+        const tableWrapper = document.createElement('div');
+        tableWrapper.className = 'table-wrapper';
+        tableWrapper.appendChild(table);
+
+        container.appendChild(tableWrapper);
+
+        // Add pagination controls
         const paginationControls = document.createElement('div');
         paginationControls.className = 'pagination-controls';
 
-        // Previous button
         const prevButton = document.createElement('button');
         prevButton.className = 'page-button';
         prevButton.textContent = '← Previous';
@@ -642,12 +744,10 @@ function createTable(data) {
             if (pageNum > 1) renderPage(pageNum - 1);
         };
 
-        // Page number display
         const pageDisplay = document.createElement('div');
         pageDisplay.className = 'page-display';
         pageDisplay.textContent = `Page ${pageNum} of ${totalPages}`;
 
-        // Next button
         const nextButton = document.createElement('button');
         nextButton.className = 'page-button';
         nextButton.textContent = 'Next →';
@@ -662,40 +762,78 @@ function createTable(data) {
         container.appendChild(paginationControls);
     }
 
+    window.renderPage = renderPage;
     renderPage(currentPage);
 }
 
 function sortTable(column, table) {
-    const tbody = table.querySelector('tbody');
-    const rows = Array.from(tbody.querySelectorAll('tr'));
-    const headers = table.querySelectorAll('th');
-    const headerCell = Array.from(headers).find(th => th.textContent === column);
-    
-    const isAscending = !headerCell.classList.contains('sort-asc');
-    
-    // Reset all headers
-    headers.forEach(th => {
-        th.classList.remove('sort-asc', 'sort-desc');
-    });
-    
-    // Set new sort direction
-    headerCell.classList.add(isAscending ? 'sort-asc' : 'sort-desc');
+    // Update sort state
+    if (currentSortColumn === column) {
+        // Toggle sort direction if same column clicked
+        currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+        // Set new column and default to ascending
+        currentSortColumn = column;
+        currentSortDirection = 'asc';
+    }
 
-    const sortedRows = rows.sort((a, b) => {
-        const aValue = a.children[Array.from(headers).indexOf(headerCell)].textContent;
-        const bValue = b.children[Array.from(headers).indexOf(headerCell)].textContent;
+    // Sort the entire dataset
+    data.sort((a, b) => {
+        // First check if values exist
+        if (!a[column] && !b[column]) return 0;
+        if (!a[column]) return 1;
+        if (!b[column]) return -1;
+
+        let aValue = a[column];
+        let bValue = b[column];
         
-        if (!isNaN(aValue) && !isNaN(bValue)) {
-            return isAscending ? aValue - bValue : bValue - aValue;
+        // Convert to numbers if numeric strings
+        const aNumeric = !isNaN(aValue) && aValue !== '';
+        const bNumeric = !isNaN(bValue) && bValue !== '';
+        if (aNumeric && bNumeric) {
+            aValue = Number(aValue);
+            bValue = Number(bValue);
+            return currentSortDirection === 'asc' ? aValue - bValue : bValue - aValue;
         }
         
-        return isAscending ? 
-            aValue.localeCompare(bValue) : 
-            bValue.localeCompare(aValue);
+        // String comparison for non-numeric values
+        return currentSortDirection === 'asc' ? 
+            String(aValue).localeCompare(String(bValue)) : 
+            String(bValue).localeCompare(String(aValue));
     });
 
-    tbody.innerHTML = '';
-    sortedRows.forEach(row => tbody.appendChild(row));
+    // Reset to first page and recreate table
+    currentPage = 1;
+    createTable(data);
+}
+
+function sortByStatus() {
+    const statusOrder = {
+        'GOLD': 1,
+        'SILVER': 2,
+        'STACKED': 3,
+        'RARE': 4,
+        '': 5  // for items without status
+    };
+
+    data.sort((a, b) => {
+        const statusA = (a?._status || '').trim().toUpperCase();
+        const statusB = (b?._status || '').trim().toUpperCase();
+        
+        // Get the order value for each status, defaulting to highest number if status not found
+        const orderA = statusOrder[statusA] || 999;
+        const orderB = statusOrder[statusB] || 999;
+        
+        return orderA - orderB;
+    });
+
+    // Reset sorting state
+    currentSortColumn = null;
+    currentSortDirection = 'asc';
+    
+    // Reset to first page and recreate table
+    currentPage = 1;
+    createTable(data);
 }
 </script>
 </body></html>
